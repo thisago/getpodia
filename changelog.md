@@ -2,6 +2,12 @@
 
 All changes
 
+## Version 1.1.1 (04/10/2021)
+
+- Fixed crash when description not exists
+
+---
+
 ## Version 1.1.0 (04/10/2021)
 
 - Added `all` command

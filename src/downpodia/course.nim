@@ -57,7 +57,11 @@ proc extractCourse*(client; url: string): Course =
     lecture.name = lect.findAll("div", {"class": "panel-heading text-center-xs"})[0].innerText.strip
     result.lectures.add lecture
   result.name = html.findAll("h1", {"class": "ma0"})[0].innerText.strip
-  result.description = html.findAll("div", {"class": "mt5 text-xs"})[0].innerText.strip
+  block description:
+    let descEl = html.findAll("div", {"class": "mt5 text-xs"})
+    if descEl.len == 0:
+      break
+    result.description = descEl[0].innerText.strip
   result.image = html.findAll("img", {"class": "img-responsive img-rounded center-block mb7"})[0].attrs["src"]
 
 proc findText(body, t: string): int =
