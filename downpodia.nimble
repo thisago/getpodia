@@ -1,9 +1,9 @@
 # Package
 
-version       = "1.0.0"
+version       = "1.1.0"
 author        = "Thiago Navarro"
 description   = "A new awesome nimble package"
-license       = "MIT"
+license       = "GPL-3"
 srcDir        = "src"
 
 # Dependencies

@@ -37,31 +37,49 @@ You can can use it from command line.
 
 **Help**
 ```
-CLI interface of DownPodia
-Usage:
-  downpodia {SUBCMD}  [sub-command options & parameters]
-where {SUBCMD} is one of:
-  help      print comprehensive or per-cmd help
-  crawl     Extracts all urls from the given page
-  download  Creates the folder structure based on
-            lectures and videos and download all
-            videos
+$ ./downpodia help
+This is a multiple-dispatch command.  -h/--help/--help-syntax is available
+for top-level/all subcommands.  Usage is like:
+    downpodia {SUBCMD} [subcommand-opts & args]
+where subcommand syntaxes are as follows:
+
+  crawl [required&optional-params] [url: string...]
+    Extracts all urls from the given page
+
+    Need login cookies to crawl
+  Options:
+      -c=, --cookieFile=     string  REQUIRED  set cookieFile
+      -o=, --outDir=         string  REQUIRED  set outDir
+      -e, --extractVideos    bool    true      set extractVideos
+      -m, --extractMetaData  bool    true      set extractMetaData
+
+  download [optional-params] [path: string...]
+    Creates the folder structure based on lectures and videos and download all videos
+  Options:
+
+  all [required&optional-params] [url: string...]
+    Crawl and download automatically
+  Options:
+      -c=, --cookieFile=  string  REQUIRED  set cookieFile
+      -o=, --outDir=      string  REQUIRED  set outDir
+```
+
+To see help for others commands, use
+```bash
+$ ./downpodia help <command>
 ```
 
 #### Usage
-- Get data
-  1. Login in your podia.com account in your browser
-  2. Get the course preview url (not video watching page)
-  3. Get the cookies and put it in a file
-  4. Replace the `<label...>` with the correct values
-      ```bash
-      ./downpodia crawl -c <cookies file> -o <output dir> <course url>
-      ```
-- Download
-  1. Replace the `<label...>` with the correct value
-      ```bash
-      ./downpodia download -c <cookies file> -o <output dir> <course url>
-      ```
+1. Login in your podia.com account in your browser
+2. Get the course preview url (not video watching page)
+3. Get the cookies and put it in a file
+4. Replace the `<label...>` with the correct values
+    ```bash
+    $ ./downpodia all -c <cookies file> -o <output dir> <course url>
+    ```
+5. Wait extract and download
+6. Enjoy watching the course! :)
+
 ---
 
 ## Researches
@@ -83,3 +101,7 @@ The site adds a "metadata" in top with a `embedUrl`
 this url don't even need login
 
 Just use `JDownloader` to easily download
+
+## License
+
+GPL-3

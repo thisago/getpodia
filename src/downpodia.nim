@@ -52,21 +52,25 @@ proc crawl(url: seq[string]; cookieFile: string; outDir: string;
       "If-None-Match": "W/\"ab9a360988d25b136b6e45c2d33280cc\""
     })
     course = client.extractCourse(url)
+    proc progress(now: range[0..1], text: string) =
+      showBar progressBar(int now, 2, rText = text)
     if extractVideos:
-      var l = 0
+      var l = 1
       for lecture in course.lectures.mitems:
-        echo fmt"Extracting lecture '{lecture.name}'"
-        echo progressBar(l, course.lectures.len, lText = "Lectures ", rText = fmt" {l}/{course.lectures.len}")
-        var v = 0
+        echo ""
+        var v = 1
         for video in lecture.videos.mitems:
+          stdout.styledWrite fgGreen, "Extracting"
+          echo fmt" {video.name} [{v}/{lecture.videos.len - 1}] - {lecture.name} [{l}/{course.lectures.len - 1}]"
+
+          progress 0, "Video data"
           client.update video
-          echo progressBar(v, lecture.videos.len, lText = "Videos ", rText = fmt" {v}/{lecture.videos.len}")
-          echo fmt"Extracted data from '{video.name}'"
           if extractMetaData:
-            echo "Getting meta"
+            progress 1, "Metadata"
             video.getMeta
+          showBar ""
           inc v
-      inc l
+        inc l
     client.close()
   if not dirExists outDir:
     createDir outDir
@@ -101,6 +105,7 @@ proc download*(path: seq[string]) =
   var state = downloadState.readFile.parseJson
 
   for l, lecture in course.lectures:
+    echo ""
     let lDir = downloadPath / fmt"{l}-{lecture.name}"
     if not state.hasKey lecture.name:
       state{lecture.name} = newJObject()
@@ -113,7 +118,7 @@ proc download*(path: seq[string]) =
         stdout.styledWrite fgYellow, "Skipping"
       else:
         stdout.styledWrite fgGreen, "Downloading"
-      echo fmt" {video.name} [{v}/{lecture.videos.len}] - {lecture.name} [{l}/{course.lectures.len}]"
+      echo fmt" {video.name} [{v}/{lecture.videos.len - 1}] - {lecture.name} [{l}/{course.lectures.len - 1}]"
       if skip:
         continue
       let vDir = lDir / fmt"{v}-{video.name}"
@@ -131,10 +136,20 @@ proc download*(path: seq[string]) =
       writeFile downloadState, $ state
       showBar ""
 
+proc all*(url: seq[string]; cookieFile, outDir: string) =
+  ## Crawl and download automatically
+  if not fileExists outDir / dataJsonFile:
+    crawl(url, cookieFile, outDir)
+  else:
+    styledEcho fgYellow, "Skipping data extract"
+  download(@[outDir])
+
 when isMainModule:
   import pkg/cligen
   dispatchMulti([crawl, short = {
     "extractMetaData": 'm'
   }], [
     download
+  ], [
+    all
   ])

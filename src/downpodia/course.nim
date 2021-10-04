@@ -49,9 +49,10 @@ proc extractCourse*(client; url: string): Course =
     html = parseHtml client.getContent url
   for lect in html.findAll("div", {"class": "panel panel-default panel-lg mv7"}):
     var lecture: CourseLecture
-    for url in lect.findAll("a"):
+    for vidEl in lect.findAll("div", {"class": "row v-center text-center-xs"}):
       var video: CourseVideo
-      video.pageUrl = $(urlBase / url.attrs["href"])
+      video.pageUrl = $(urlBase / vidEl.findAll("a")[0].attrs["href"])
+      video.name = vidEl.findAll("div", {"class": "col-sm-6 text-xs"})[0].innerText.strip
       lecture.videos.add video
     lecture.name = lect.findAll("div", {"class": "panel-heading text-center-xs"})[0].innerText.strip
     result.lectures.add lecture
