@@ -53,7 +53,7 @@ proc crawl(url: seq[string]; cookieFile: string; outDir: string;
     })
     course = client.extractCourse(url)
     proc progress(now: range[0..1], text: string) =
-      showBar progressBar(int now, 2, rText = text)
+      showBar progressBar(int now, 1, rText = " " & text)
     if extractVideos:
       var l = 1
       for lecture in course.lectures.mitems:
