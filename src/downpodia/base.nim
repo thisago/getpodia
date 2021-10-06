@@ -41,3 +41,9 @@ func findAll*(node; sels: openArray[(string, seq[FindAttr])];
     if result.len == 0:
       break
     el = result[0]
+
+const InvalidFilename = {'/','\\',':','*','?','"','<','>'}
+proc secureName*(str: string): string =
+  for ch in str:
+    if ch notin InvalidFilename:
+      result.add ch

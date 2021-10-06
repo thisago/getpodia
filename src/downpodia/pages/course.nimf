@@ -1,0 +1,46 @@
+#? stdtmpl | standard
+#import downpodia/course
+#import downpodia/base
+#import downpodia/pages/style
+#from std/os import `/`
+#from std/strformat import fmt
+#proc genCourse(course: Course): string =
+#  result = ""
+#  const indexHtml = "index.html"
+<style>$podiaCourseStyle</style>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="text-center pv8">
+        <h1 class="ma0">$course.name</h1>
+        <div class="mt5 text-xs">$course.description</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">
+        <img class="img-responsive img-rounded center-block mb7"
+          src="$course.image">
+      </div>
+    </div>
+  </div>
+  <div class="product-contents">
+    #for l, lecture in course.lectures:
+    <div class="panel panel-default panel-lg mv7">
+      <div class="panel-heading text-center-xs">$lecture.name</div>
+      <div class="list-group">
+        #for v, video in lecture.videos:
+        <div class="list-group-item list-group-item-lg">
+          <div class="row v-center text-center-xs">
+            <div class="col-sm-6 text-xs">$video.name</div>
+            <div class="col-sm-3 text-xs">${video.meta.size.int div 1048576}MB</div>
+            <div class="col-sm-3 text-right pt5-xs">
+              <a class="btn btn-primary btn-sm block-xs" href="${fmt"{l}-{lecture.name.secureName}/{v}-{video.name.secureName}" / indexHtml}">View</a>
+            </div>
+          </div>
+        </div>
+        #end for
+      </div>
+    </div>
+    #end for
+  </div>
+</div>

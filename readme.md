@@ -9,6 +9,7 @@ Easily download podia.com courses videos
   - [x] Name
   - [x] Image
   - [x] Description
+  - [x] Code (Url identifier)
   - [x] Lectures
     - [x] Name
     - [x] Videos

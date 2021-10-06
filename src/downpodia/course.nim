@@ -1,19 +1,17 @@
 ## Course extractor
 
-{.experimental: "codeReordering".}
-
 import downpodia/base
 
 from std/uri import parseUri, `/`, `$`, Uri
 from std/xmltree import attrs
 from std/strtabs import `[]`
 from std/strformat import fmt
-from std/strutils import strip, find, parseInt
+from std/strutils import strip, find, parseInt, split
 from std/json import parseJson, `{}`, getStr, getInt, `$`
 
 type
   Course* = object
-    name*, image*, description*: string
+    name*, image*, description*, code*: string
     lectures*: seq[CourseLecture]
   CourseLecture* = object
     name*: string
@@ -38,14 +36,22 @@ type
 using
   client: HttpClient
 
-proc getBaseUrl(url: string): Uri =
-  let u = url.parseUri
-  result = fmt"{u.scheme}://{u.hostname}:{u.port}".parseUri
+proc getBaseUrl(url: Uri): Uri =
+  fmt"{url.scheme}://{url.hostname}:{url.port}".parseUri
+
+proc getCode(url: Uri): string =
+  ## Get the course code (url identification) from Uri instance
+  let parts = url.path.split "/"
+  result = parts[2]
+proc getCode*(url: string): string =
+  ## Get the course code (url identification) from url string
+  getCode parseUri url
 
 proc extractCourse*(client; url: string): Course =
   ## Extracts all data from all videos from course
   let
-    urlBase = url.getBaseUrl
+    parsedUrl = url.parseUri
+    urlBase = parsedUrl.getBaseUrl
     html = parseHtml client.getContent url
   for lect in html.findAll("div", {"class": "panel panel-default panel-lg mv7"}):
     var lecture: CourseLecture
@@ -63,6 +69,8 @@ proc extractCourse*(client; url: string): Course =
       break
     result.description = descEl[0].innerText.strip
   result.image = html.findAll("img", {"class": "img-responsive img-rounded center-block mb7"})[0].attrs["src"]
+  result.code = url.getCode
+
 
 proc findText(body, t: string): int =
   result = body.find(t) + t.len

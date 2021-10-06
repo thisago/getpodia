@@ -2,6 +2,15 @@
 
 All changes
 
+## Version 2.0.0 (06/10/2021)
+
+- Added Podia HTML pages generation
+- Added download size verification
+- Added smart folder creation by course name
+- Added `code` prop in `Course` type
+
+---
+
 ## Version 1.1.2 (05/10/2021)
 
 - Added coursename and description info in `stdout`

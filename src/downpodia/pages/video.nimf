@@ -1,0 +1,81 @@
+#? stdtmpl | standard
+#import downpodia/course
+#import downpodia/base
+#import downpodia/pages/style
+#proc genVideo(course: Course; lectureIndex, videoIndex: int): string =
+#  result = ""
+#  let indexPage = "index.html"
+#  var lecture = course.lectures[lectureIndex]
+#  let video = lecture.videos[videoIndex]
+<style>$podiaCourseStyle</style>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="text-center pv8">
+        <h1 class="ma0">$video.name</h1>
+        <div class="mt5 text-xs">
+          <a class="text-muted" href="../../index.html">
+            $course.name
+            <span class="mh1">/</span>
+            $lecture.name
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mb7 center-block">
+    <video controls style="width: 940px">
+      <source src="$video.meta.filename" type="video/mp4">
+    </video>
+  </div>
+</div>
+<div class="shadow-panel-wrapper mt8">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2">
+        <div class="-mb7 -ml6">
+          <span class="membership-post-comment-count flex-inline flex-align-center no-underline ml6">1 comments</span>
+        </div>
+        <div class="shadow-panel" id="comments">
+          <div class="comment-list" id="commentList">
+            #for comment in video.comments:
+            <div class="comment pv4">
+              <div class="row v-center mb3">
+                <div class="col-xs-6">
+                  <span class="commenter-image"><img class="img-circle mr2 bg-primary" src="$comment.avatar" width="30" height="30"></span>
+                  <span class="text-w-700 text-darkest text-xs">$comment.author</span>
+                </div>
+                <div class="col-xs-6 text-right">
+                  <span class="text-xxs text-gray-light"><a class="text-muted comment-created-at"
+                      href="#comment-441975" skip-recent-text="Agora mesmo!" datetime="2021-09-15T15:25:24+00:00"
+                      locale="pt-BR">21
+                      days ago</time></a></span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="comment-body">
+                    <div class="ml2 text-xs">
+                      $comment.body
+                    </div>
+                    <div class="mt2 ml2 flex flex-align-center">
+                      <a class="membership-post-like-count like-count flex-inline flex-align-center no-underline"
+                        id="likes_count_comment_441975"
+                        href="/courses/imperfeito/710295-introducao/2065769-perfeccionismo-qualidade-ou-defeito/comments/441975/like"><svg
+                          xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" class="mr2">
+                          <path
+                            d="M18.856 2.975a5.019 5.019 0 0 0-7.307 0 5.38 5.38 0 0 0-.652.833 5.38 5.38 0 0 0-.652-.833 5.019 5.019 0 0 0-7.306 0C.92 5.08.92 8.49 2.939 10.592l7.958 8.297 7.959-8.297c2.018-2.103 2.018-5.513 0-7.617z"
+                            stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span>3</span></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            #end for
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -3,15 +3,17 @@
 ## Easily download all podia.com courses
 
 import downpodia/base
-from downpodia/course import extractCourse, update, getMeta, Course
-from downpodia/progress import progressBar, showBar
+from downpodia/course import extractCourse, update, getMeta, Course, getCode
 export course
+from downpodia/progress import progressBar, showBar
+from downpodia/pages import homepage, page, video
+export pages
 
 from std/os import fileExists, dirExists, setCurrentDir, createDir, `/`, getFileSize,
-                   moveFile
+                   moveFile, walkDir, pcDir
 from std/strformat import fmt
 from std/httpclient import downloadFile
-import karax/[karaxdsl, vdom]
+
 from std/browsers import openDefaultBrowser
 
 import std/[
@@ -19,38 +21,44 @@ import std/[
   terminal
 ]
 
-const dataJsonFile* {.strdefine.} = "data.json"
-const indexHtmlFile* {.strdefine.} = "index.html"
-const downloadPath* {.strdefine.} = "data"
-const downloadState* {.strdefine.} = "data/state.json"
+const
+  dataJsonFile* {.strdefine.} = "data.json"
+  downloadState* {.strdefine.} = "state.json"
+  indexHtmlFile* {.strdefine.} = "index.html"
 
-proc showCourse(course: Course) =
+proc showCourse(course: Course; description = true) =
   stdout.styledWrite fgCyan, "Course: "
   echo course.name
 
-  if course.description.len > 0:
-    stdout.styledWrite fgCyan, "Description: "
-    echo course.description
-  else:
-    styledEcho fgCyan, "No description"
+  if description:
+    if course.description.len > 0:
+      stdout.styledWrite fgCyan, "Description: "
+      echo course.description
+    else:
+      styledEcho fgCyan, "No description"
 
 proc crawl(url: seq[string]; cookieFile: string; outDir: string;
-           extractVideos = true; extractMetaData = true) =
+           extractVideos = true; extractMetadata = true) =
   ## Extracts all urls from the given page
   ##
   ## Need login cookies to crawl
-  if url.len != 1:
-    quit "Please insert just one url"
+  if url.len < 1:
+    quit "Please insert at least one url"
+  if url.len > 1:
+    for p in url:
+      crawl(@[p], cookieFile, outDir, extractVideos, extractMetadata)
+    return
   if not cookieFile.fileExists:
     quit "Cookie file not exists"
   let cookie = readFile cookieFile
   if cookie.len < 1:
     quit "Cookie file is empty"
   if outDir.len < 1:
-    quit "No output provided"
+    quit "No courses directory provided"
   let url = url[0]
   if url.len < 1:
     quit "No url provided"
+  styledEcho styleDim, "Crawling"
   var course: Course
   block crawl:
     var client = newHttpClient()
@@ -68,30 +76,30 @@ proc crawl(url: seq[string]; cookieFile: string; outDir: string;
 
     showCourse course
 
-    proc progress(now: range[0..1], text: string) =
+    proc progress(now: range[0..1]; text: string) =
       showBar progressBar(int now, 1, rText = " " & text)
     if extractVideos:
-      var l = 1
+      var l = 0
       for lecture in course.lectures.mitems:
         echo ""
-        var v = 1
+        var v = 0
         for video in lecture.videos.mitems:
           stdout.styledWrite fgGreen, "Extracting"
           echo fmt" {video.name} [{v}/{lecture.videos.len - 1}] - {lecture.name} [{l}/{course.lectures.len - 1}]"
 
           progress 0, "Video data"
           client.update video
-          if extractMetaData:
+          if extractMetadata:
             progress 1, "Metadata"
             video.getMeta
           showBar ""
           inc v
         inc l
     client.close()
-  if not dirExists outDir:
-    createDir outDir
-  writeFile outDir / dataJsonFile, $ %* course
-
+  let courseDir = outDir / course.code
+  if not dirExists courseDir:
+    createDir courseDir
+  writeFile courseDir / dataJsonFile, $ %* course
 
 proc onChangeProgress(total, progress, speed: BiggestInt) =
   let
@@ -104,16 +112,21 @@ proc onChangeProgress(total, progress, speed: BiggestInt) =
     rText = fmt" {progress}mb/{total}mb Speed: {speed}mb/s"
   )
 
-proc download*(path: seq[string]) =
+proc download*(courseDir: seq[string]) =
   ## Creates the folder structure based on lectures and videos and download all videos
-  if path.len != 1:
-    quit "Please provide just one path"
-  let path = path[0]
-  if path.len < 1:
-    quit "No path provided"
-  setCurrentDir path
+  if courseDir.len < 1:
+    quit "Please provide at least one course directory"
+  if courseDir.len > 1:
+    for p in courseDir:
+      download(@[p])
+    return
+  let courseDir = courseDir[0]
+  if courseDir.len < 1:
+    quit "No courseDir provided"
+  setCurrentDir courseDir
+  styledEcho styleDim, "Downloading"
+
   var course = dataJsonFile.readFile.parseJson.to Course
-  createDir downloadPath
 
   showCourse course
 
@@ -124,102 +137,91 @@ proc download*(path: seq[string]) =
 
   for l, lecture in course.lectures:
     echo ""
-    let lDir = downloadPath / fmt"{l}-{lecture.name}"
+    let lDir = fmt"{l}-{lecture.name.secureName}"
     if not state.hasKey lecture.name:
       state{lecture.name} = newJObject()
     createDir lDir
     var lectState = state{lecture.name}
     for v, video in lecture.videos:
       var skip = false
-      if lectState{video.name}.getBool:
-        skip = true
+      let vDir = lDir / fmt"{v}-{video.name.secureName}"
+      let fileOut = vDir / video.meta.filename
+      if fileExists fileOut:
+        let fileSize = fileOut.getFileSize
+        if lectState{video.code}.getInt == fileSize:
+          skip = true
+        if fileSize != video.meta.size:
+          skip = false
+          stdout.styledWrite fgRed, "Video is corrupt. "
+      if skip:
         stdout.styledWrite fgYellow, "Skipping"
       else:
         stdout.styledWrite fgGreen, "Downloading"
       echo fmt" {video.name} [{v}/{lecture.videos.len - 1}] - {lecture.name} [{l}/{course.lectures.len - 1}]"
       if skip:
         continue
-      let vDir = lDir / fmt"{v}-{video.name}"
       createDir vDir
       block down:
-        let fileOut = vDir / video.meta.filename
         var client = newHttpClient()
         client.headers = newHttpHeaders({
           "User-Agent": userAgent
         })
         client.onProgressChanged = onChangeProgress
-        client.downloadFile(video.meta.url, filename = fileOut)
+        writeFile fileOut, video.meta.url
+        # client.downloadFile(video.meta.url, filename = fileOut)
         client.close()
-      lectState{video.name} = %true
+      lectState{video.code} = %fileout.getFileSize
       writeFile downloadState, $ state
       showBar ""
 
-proc all*(url: seq[string]; cookieFile, outDir: string) =
+proc genPages*(coursesFolder: seq[string]) =
+  if coursesFolder.len != 1:
+    quit "Please provide just one courses path"
+  let coursesFolder = coursesFolder[0]
+  var courses: seq[Course]
+  for dir in walkDir coursesFolder:
+    if dir.kind != pcDir:
+      continue
+    let jsonFile = dir.path / dataJsonFile
+    let course = jsonFile.readFile.parseJson.to Course
+    showCourse(course, description = false)
+
+    let courseDir = coursesFolder / course.code
+    writeFile(courseDir / indexHtmlFile, course.page)
+    for l, lecture in course.lectures:
+      stdout.styledWrite fgGreen, "Generating lecture page "
+      echo lecture.name
+      let lectureDir = courseDir / fmt"{l}-{lecture.name.secureName}"
+      for v, video in lecture.videos:
+        stdout.styledWrite fgGreen, "Generating video page "
+        echo video.name
+        let videoDir = lectureDir / fmt"{v}-{video.name.secureName}"
+        writeFile(videoDir / indexHtmlFile, course.video(l, v))
+    courses.add course
+  let indexPage = coursesFolder / indexHtmlFile
+  writeFile(indexPage, homepage courses)
+  indexPage.openDefaultBrowser
+
+proc all*(urls: seq[string]; cookieFile, outDir: string) =
   ## Crawl and download automatically
-  if not fileExists outDir / dataJsonFile:
-    crawl(url, cookieFile, outDir)
-  else:
-    styledEcho fgYellow, "Skipping data extract"
-  download(@[outDir])
-
-proc view*(courseOutPath: seq[string]) =
-  if courseOutPath.len != 1:
-    quit "Please provide just one course output path"
-  const viewHtmlStyle = """
-    * {
-      box-sizing: border-box;
-      outline: 0;
-      border: none;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      margin: 2em;
-      padding: 2em;
-    }
-    .container {
-      background-color: #00000005;
-      padding: 2em;
-    }
-  """
-  let
-    courseDir = courseOutPath[0]
-    courseJsonFile = courseDir / dataJsonFile
-    courseHtmlFile = courseDir / indexHtmlFile
-    course = courseJsonFile.readFile.parseJson.to Course
-    vnode = buildHtml(tdiv(class = "podia_data")):
-      style:
-        text viewHtmlStyle
-      tdiv(class = "container"):
-        tdiv(class = "header"):
-          h1: text course.name
-          p: text course.description
-          img(src= course.image)
-      tdiv(class = "container"):
-        for lecture in course.lectures:
-          tdiv(class = "lecture"):
-            tdiv(class = "container"):
-              tdiv(class = "header"):
-                tdiv(class = "title"):
-                  text lecture.name
-              tdiv(class = "container"):
-                for video in lecture.videos:
-                  tdiv(class="video"):
-                    text video.name
-
-  writeFile courseHtmlFile, $vnode
-  openDefaultBrowser courseHtmlFile
+  for url in urls:
+    let code = getCode url
+    if not fileExists outDir / code / dataJsonFile:
+      crawl(urls, cookieFile, outDir)
+    else:
+      styledEcho fgYellow, "Skipping data extract"
+    download(@[outDir / code])
 
 
 when isMainModule:
   import pkg/cligen
   dispatchMulti([crawl, short = {
-    "extractMetaData": 'm'
+    "extractMetadata": 'm'
   }], [
     download
   ], [
     all
   ],
   [
-    view
+    genPages
   ])
