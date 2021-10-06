@@ -21,6 +21,16 @@ const dataJsonFile* {.strdefine.} = "data.json"
 const downloadPath* {.strdefine.} = "data"
 const downloadState* {.strdefine.} = "data/state.json"
 
+proc showCourse(course: Course) =
+  stdout.styledWrite fgCyan, "Course: "
+  echo course.name
+
+  if course.description.len > 0:
+    stdout.styledWrite fgCyan, "Description: "
+    echo course.description
+  else:
+    styledEcho fgCyan, "No description"
+
 proc crawl(url: seq[string]; cookieFile: string; outDir: string;
            extractVideos = true; extractMetaData = true) =
   ## Extracts all urls from the given page
@@ -52,6 +62,9 @@ proc crawl(url: seq[string]; cookieFile: string; outDir: string;
       "If-None-Match": "W/\"ab9a360988d25b136b6e45c2d33280cc\""
     })
     course = client.extractCourse(url)
+
+    showCourse course
+
     proc progress(now: range[0..1], text: string) =
       showBar progressBar(int now, 1, rText = " " & text)
     if extractVideos:
@@ -98,6 +111,8 @@ proc download*(path: seq[string]) =
   setCurrentDir path
   var course = dataJsonFile.readFile.parseJson.to Course
   createDir downloadPath
+
+  showCourse course
 
   if not fileExists downloadState:
     writeFile downloadState, "{}"

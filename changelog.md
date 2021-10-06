@@ -2,6 +2,12 @@
 
 All changes
 
+## Version 1.1.2 (05/10/2021)
+
+- Added coursename and description info in `stdout`
+
+---
+
 ## Version 1.1.1 (04/10/2021)
 
 - Fixed crash when description not exists
