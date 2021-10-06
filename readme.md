@@ -32,7 +32,7 @@ Easily download podia.com courses videos
         - [x] CreatedAt
 
 ## Researches
-
+<!--
 ### Podia website is a `Wordpress` site
 If you access `/wp-admin` you get a message that your browser was been blocked.
 But it doesn't
@@ -43,13 +43,13 @@ The pages uses the `storefront` script, which is a `Wordpress` theme
 ```
 
 And it loads images from wp.com
-
+-->
 ### Embed URL in `json` metadata
 The site adds a "metadata" in top with a `embedUrl`
 
 this url don't even need login
 
-Just use `JDownloader` to easily download
+The problem for that is that for load  this data, needs Javascript, so it was discarted
 
 ## License
 

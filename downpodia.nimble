@@ -8,10 +8,11 @@ srcDir        = "src"
 
 # Dependencies
 
-requires "nim >= 1.5.1"
+requires "nim >= 1.0.0"
 
 # CLI
 requires "cligen"
+requires "karax"
 
 bin = @["downpodia"]
 binDir = "build"

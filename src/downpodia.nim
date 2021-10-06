@@ -4,13 +4,15 @@
 
 import downpodia/base
 from downpodia/course import extractCourse, update, getMeta, Course
-from downpodia/progressBar import progressBar, showBar
+from downpodia/progress import progressBar, showBar
 export course
 
 from std/os import fileExists, dirExists, setCurrentDir, createDir, `/`, getFileSize,
                    moveFile
 from std/strformat import fmt
 from std/httpclient import downloadFile
+import karax/[karaxdsl, vdom]
+from std/browsers import openDefaultBrowser
 
 import std/[
   json,
@@ -18,6 +20,7 @@ import std/[
 ]
 
 const dataJsonFile* {.strdefine.} = "data.json"
+const indexHtmlFile* {.strdefine.} = "index.html"
 const downloadPath* {.strdefine.} = "data"
 const downloadState* {.strdefine.} = "data/state.json"
 
@@ -159,6 +162,55 @@ proc all*(url: seq[string]; cookieFile, outDir: string) =
     styledEcho fgYellow, "Skipping data extract"
   download(@[outDir])
 
+proc view*(courseOutPath: seq[string]) =
+  if courseOutPath.len != 1:
+    quit "Please provide just one course output path"
+  const viewHtmlStyle = """
+    * {
+      box-sizing: border-box;
+      outline: 0;
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      margin: 2em;
+      padding: 2em;
+    }
+    .container {
+      background-color: #00000005;
+      padding: 2em;
+    }
+  """
+  let
+    courseDir = courseOutPath[0]
+    courseJsonFile = courseDir / dataJsonFile
+    courseHtmlFile = courseDir / indexHtmlFile
+    course = courseJsonFile.readFile.parseJson.to Course
+    vnode = buildHtml(tdiv(class = "podia_data")):
+      style:
+        text viewHtmlStyle
+      tdiv(class = "container"):
+        tdiv(class = "header"):
+          h1: text course.name
+          p: text course.description
+          img(src= course.image)
+      tdiv(class = "container"):
+        for lecture in course.lectures:
+          tdiv(class = "lecture"):
+            tdiv(class = "container"):
+              tdiv(class = "header"):
+                tdiv(class = "title"):
+                  text lecture.name
+              tdiv(class = "container"):
+                for video in lecture.videos:
+                  tdiv(class="video"):
+                    text video.name
+
+  writeFile courseHtmlFile, $vnode
+  openDefaultBrowser courseHtmlFile
+
+
 when isMainModule:
   import pkg/cligen
   dispatchMulti([crawl, short = {
@@ -167,4 +219,7 @@ when isMainModule:
     download
   ], [
     all
+  ],
+  [
+    view
   ])
