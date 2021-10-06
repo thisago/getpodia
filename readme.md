@@ -32,6 +32,12 @@ Easily download podia.com courses videos
         - [x] Bitrate
         - [x] CreatedAt
 
+## TODO
+
+- [ ] Fix docs generation
+
+---
+
 ## Researches
 <!--
 ### Podia website is a `Wordpress` site

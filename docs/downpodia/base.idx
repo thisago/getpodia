@@ -1,0 +1,5 @@
+userAgent	downpodia/base.html#userAgent	base: userAgent	
+FindAttr	downpodia/base.html#FindAttr	base: FindAttr	
+findAll	downpodia/base.html#findAll,,string,openArray[FindAttr]	base: findAll(node; tagName: string; attrs: openArray[FindAttr];\n        caseInsensitive = false): seq[XmlNode]	
+findAll	downpodia/base.html#findAll,,openArray[]	base: findAll(node; sels: openArray[(string, seq[FindAttr])]; caseInsensitive = false): seq[\n    XmlNode]	
+secureName	downpodia/base.html#secureName,string	base: secureName(str: string): string	
