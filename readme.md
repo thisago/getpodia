@@ -38,7 +38,7 @@ All pages have same design as podia.com
 - [x] Course page (lecture preview and video selection)
 - [x] Video page (watch video and view comments)
 
-
+---
 
 ## TODO
 
