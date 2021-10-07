@@ -5,6 +5,7 @@ All changes
 ## Version 2.1.0 (07/10/2021)
 
 - Added comment likes and creation date in pages generation
+- Removed url from like button
 
 ---
 

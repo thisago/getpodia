@@ -57,15 +57,14 @@
                       $comment.body
                     </div>
                     <div class="mt2 ml2 flex flex-align-center">
-                      <a class="membership-post-like-count like-count flex-inline flex-align-center no-underline"
-                        id="likes_count_comment_441975"
-                        href="/courses/imperfeito/710295-introducao/2065769-perfeccionismo-qualidade-ou-defeito/comments/441975/like"><svg
-                          xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" class="mr2">
+                      <span class="membership-post-like-count like-count flex-inline flex-align-center no-underline">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" class="mr2">
                           <path
                             d="M18.856 2.975a5.019 5.019 0 0 0-7.307 0 5.38 5.38 0 0 0-.652.833 5.38 5.38 0 0 0-.652-.833 5.019 5.019 0 0 0-7.306 0C.92 5.08.92 8.49 2.939 10.592l7.958 8.297 7.959-8.297c2.018-2.103 2.018-5.513 0-7.617z"
                             stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
-                        <span>$comment.likes</span></a>
+                        <span>$comment.likes</span>
+                      </span>
                     </div>
                   </div>
                 </div>
