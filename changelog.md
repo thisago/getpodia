@@ -2,6 +2,12 @@
 
 All changes
 
+## Version 2.1.0 (07/10/2021)
+
+- Added comment likes and creation date in pages generation
+
+---
+
 ## Version 2.0.0 (06/10/2021)
 
 - Added Podia HTML pages generation

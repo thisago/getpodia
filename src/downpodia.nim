@@ -167,8 +167,7 @@ proc download*(courseDir: seq[string]) =
           "User-Agent": userAgent
         })
         client.onProgressChanged = onChangeProgress
-        writeFile fileOut, video.meta.url
-        # client.downloadFile(video.meta.url, filename = fileOut)
+        client.downloadFile(video.meta.url, filename = fileOut)
         client.close()
       lectState{video.code} = %fileout.getFileSize
       writeFile downloadState, $ state

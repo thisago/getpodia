@@ -1,6 +1,5 @@
 #? stdtmpl | standard
 #import downpodia/course
-#import downpodia/base
 #import downpodia/pages/style
 #proc genVideo(course: Course; lectureIndex, videoIndex: int): string =
 #  result = ""
@@ -48,8 +47,7 @@
                 <div class="col-xs-6 text-right">
                   <span class="text-xxs text-gray-light"><a class="text-muted comment-created-at"
                       href="#comment-441975" skip-recent-text="Agora mesmo!" datetime="2021-09-15T15:25:24+00:00"
-                      locale="pt-BR">21
-                      days ago</time></a></span>
+                      locale="pt-BR">${$comment.creation}</time></a></span>
                 </div>
               </div>
               <div class="row">
@@ -67,7 +65,7 @@
                             d="M18.856 2.975a5.019 5.019 0 0 0-7.307 0 5.38 5.38 0 0 0-.652.833 5.38 5.38 0 0 0-.652-.833 5.019 5.019 0 0 0-7.306 0C.92 5.08.92 8.49 2.939 10.592l7.958 8.297 7.959-8.297c2.018-2.103 2.018-5.513 0-7.617z"
                             stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
-                        <span>3</span></a>
+                        <span>$comment.likes</span></a>
                     </div>
                   </div>
                 </div>

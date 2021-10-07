@@ -35,6 +35,7 @@ Easily download podia.com courses videos
 ## TODO
 
 - [ ] Fix docs generation
+- [ ] `course.VideoComment.creation` needs to store unix time instead string
 
 ---
 
