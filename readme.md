@@ -32,6 +32,14 @@ Easily download podia.com courses videos
         - [x] Bitrate
         - [x] CreatedAt
 
+### Page generation
+All pages have same design as podia.com
+- [x] Home page (courses selection)
+- [x] Course page (lecture preview and video selection)
+- [x] Video page (watch video and view comments)
+
+
+
 ## TODO
 
 - [ ] Fix docs generation
