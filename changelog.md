@@ -2,6 +2,14 @@
 
 All changes
 
+## Version 2.2.0 (07/10/2021)
+
+- page generation
+  - Added id to lectures
+  - video page links to correct lecture
+
+---
+
 ## Version 2.1.0 (07/10/2021)
 
 - Added comment likes and creation date in pages generation

@@ -13,7 +13,7 @@
       <div class="text-center pv8">
         <h1 class="ma0">$video.name</h1>
         <div class="mt5 text-xs">
-          <a class="text-muted" href="../../index.html">
+          <a class="text-muted" href="../../index.html#$lectureIndex">
             $course.name
             <span class="mh1">/</span>
             $lecture.name

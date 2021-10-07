@@ -25,7 +25,7 @@
   </div>
   <div class="product-contents">
     #for l, lecture in course.lectures:
-    <div class="panel panel-default panel-lg mv7">
+    <div class="panel panel-default panel-lg mv7" id="$l">
       <div class="panel-heading text-center-xs">$lecture.name</div>
       <div class="list-group">
         #for v, video in lecture.videos:
