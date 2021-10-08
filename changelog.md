@@ -2,6 +2,13 @@
 
 All changes
 
+## Version 2.3.0 (08/10/2021)
+
+- page generation
+  - Added comments counter in `video.nimf`
+
+---
+
 ## Version 2.2.0 (07/10/2021)
 
 - page generation

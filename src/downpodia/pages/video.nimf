@@ -33,7 +33,7 @@
     <div class="row">
       <div class="col-sm-8 col-sm-offset-2">
         <div class="-mb7 -ml6">
-          <span class="membership-post-comment-count flex-inline flex-align-center no-underline ml6">1 comments</span>
+          <span class="membership-post-comment-count flex-inline flex-align-center no-underline ml6">$video.comments.len comments</span>
         </div>
         <div class="shadow-panel" id="comments">
           <div class="comment-list" id="commentList">
