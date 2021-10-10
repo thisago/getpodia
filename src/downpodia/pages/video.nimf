@@ -22,10 +22,25 @@
       </div>
     </div>
   </div>
+  #when not defined release:
+  <div>
+    <span style="color: red">WARNING:</span>
+    This video and thumbnail is remote
+    <div style="opacity: .6">
+      Please use the release version of the program to automatically download it
+    </div>
+  </div>
+  #end when
   <div class="mb7 center-block">
-    <video controls style="width: 940px">
+    #when defined release:
+    <video controls style="width: 940px" poster="thumbnail.png">
       <source src="$video.meta.filename" type="video/mp4">
     </video>
+    #else:
+    <video controls style="width: 940px" poster="$video.meta.thumbnail">
+      <source src="$video.meta.hdVideo" type="video/mp4">
+    </video>
+    #end when
   </div>
 </div>
 <div class="shadow-panel-wrapper mt8">
@@ -65,6 +80,45 @@
                         </svg>
                         <span>$comment.likes</span>
                       </span>
+                    </div>
+                    <div data-target="form.nest">
+                      <div class="nested-comments">
+                        #for comment in comment.nested:
+                        <div class="comment ml4 nested-comment pl4 pv4">
+                          <div class="row v-center mb3">
+                            <div class="col-xs-6">
+                              <span class="commenter-image"><img class="img-circle mr2 bg-primary" src="$comment.avatar" width="30"
+                                  height="30"></span>
+                              <span class="text-w-700 text-darkest text-xs">$comment.author</span>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                              <span class="text-xxs text-gray-light"><a class="text-muted comment-created-at" href="#comment-441975"
+                                  skip-recent-text="Agora mesmo!" datetime="2021-09-15T15:25:24+00:00"
+                                  locale="pt-BR">${$comment.creation}</time></a></span>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <div class="comment-body">
+                                <div class="ml2 text-xs">
+                                  $comment.body
+                                </div>
+                                <div class="mt2 ml2 flex flex-align-center">
+                                  <span class="membership-post-like-count like-count flex-inline flex-align-center no-underline">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" class="mr2">
+                                      <path
+                                        d="M18.856 2.975a5.019 5.019 0 0 0-7.307 0 5.38 5.38 0 0 0-.652.833 5.38 5.38 0 0 0-.652-.833 5.019 5.019 0 0 0-7.306 0C.92 5.08.92 8.49 2.939 10.592l7.958 8.297 7.959-8.297c2.018-2.103 2.018-5.513 0-7.617z"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <span>$comment.likes</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        #end for
+                      </div>
                     </div>
                   </div>
                 </div>

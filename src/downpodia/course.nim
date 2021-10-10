@@ -20,14 +20,15 @@ type
     name*, pageUrl*, code*: string
     comments*: seq[VideoComment]
     meta*: VideoMeta
-  VideoComment* = object
-    author*, body*, creation*,
-      avatar*: string
+  VideoComment* = ref VideoCommentObj
+  VideoCommentObj = object
+    author*, body*, creation*, avatar*: string
     likes*: int
+    nested*: seq[VideoComment]
   VideoSource* = distinct string
 
   VideoMeta* = object
-    filename*, url*: string
+    filename*, originalVideo*, hdVideo*, thumbnail*: string
     width*, height*: int
     size*: int64 ## bytes
     bitrate*: int
@@ -90,17 +91,23 @@ proc update*(client; self: var CourseVideo) =
     code = code[0..<endI]
     self.code = code
   block comments:
-    for com in html.findAll("div", {"class": "comment pv4"}):
-      var comment: VideoComment
-      comment.avatar = com.findAll("img")[0].attrs["src"]
-      comment.author = com.findAll("span", {"class": "text-w-700 text-darkest text-xs"})[0].innerText.strip
-      comment.body = com.findAll([
+    proc getCommentData(node: XmlNode): VideoComment =
+      new result
+      result.avatar = node.findAll("img")[0].attrs["src"]
+      result.author = node.findAll("span", {"class": "text-w-700 text-darkest text-xs"})[0].innerText.strip
+      result.body = node.findAll([
         ("div", @{"class": "comment-body"}),
         ("div", @{"class": "ml2 text-xs"})
       ])[0].innerText.strip
-      comment.creation = com.findAll("time")[0].attrs["datetime"]
-      comment.likes = com.findAll("span", {"data-target": "likes.count"})[0].innerText.strip.parseInt
+      result.creation = node.findAll("time")[0].attrs["datetime"]
+      result.likes = node.findAll("span", {"data-target": "likes.count"})[0].innerText.strip.parseInt
+    proc getNested(comment: VideoComment; commentNode: XmlNode) =
+      for nest in commentNode.findAll("div", {"class": "comment ml4 nested-comment pl4 pv4"}):
+        comment.nested.add nest.getCommentData
 
+    for com in html.findAll("div", {"class": "comment pv4"}):
+      let comment = com.getCommentData
+      comment.getNested com
       self.comments.add comment
 
 proc url*(self: CourseVideo): VideoSource =
@@ -123,18 +130,26 @@ proc getMeta*(self: var CourseVideo) =
   let
     json = parseJson jsonData
     vid = json{"assets"}{0}
-  self.meta.url = vid{"url"}.getStr
+  self.meta.originalVideo = vid{"url"}.getStr
+  self.meta.hdVideo = json{"assets"}{4}{"url"}.getStr
   self.meta.height = vid{"height"}.getInt
   self.meta.width = vid{"width"}.getInt
   self.meta.bitrate = vid{"bitrate"}.getInt
   self.meta.size = vid{"size"}.getInt
   self.meta.createdAt = vid{"created_at"}.getInt
-  self.meta.filename = html.findAll("title")[0].innerText.strip
+  self.meta.filename = json{"name"}.getStr
+  self.meta.thumbnail = json{"assets"}{6}{"url"}.getStr
 
 when isMainModule:
   var video = CourseVideo(
-    pageUrl: "http://localhost:5555/.test/courses/videos/perfeccionismo.html"
+    pageUrl: "" # Some downloaded Podia video page
   )
   newHttpClient().update video
   # video.getMeta
   echo video
+  for comment in video.comments:
+    echo comment[]
+    for comment in comment.nested:
+      echo "  ", comment[]
+      for comment in comment.nested:
+        echo "    ", comment[]

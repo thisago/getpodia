@@ -2,6 +2,19 @@
 
 All changes
 
+## Version 3.0.0 (10/10/2021)
+
+- Added page generation to `all` command
+- In debug build, the download is replaced by a simple file write to
+  help development and tests without internet
+  - If in debug build, the `video.nims` will use the remote url of
+    video instead local video path as video `src`
+- CLI procs and imports now is just made `whenIsMainModule`
+- Added video thumbnail
+- Added nested comments extracting and in video page generation
+
+---
+
 ## Version 2.3.0 (08/10/2021)
 
 - page generation

@@ -23,9 +23,11 @@ Easily download podia.com courses videos
         - [x] Creation
         - [x] Avatar
         - [x] Likes
+        - [x] Nested comments
       - [x] Video meta
         - [x] Filename
         - [x] Url (to download)
+        - [x] Thumbnail
         - [x] Width
         - [x] Height
         - [x] Size
@@ -44,6 +46,7 @@ All pages have same design as podia.com
 
 - [ ] Fix docs generation
 - [ ] `course.VideoComment.creation` needs to store unix time instead string
+- [ ] Remove inline CSS and put it in a external
 
 ---
 
@@ -65,7 +68,7 @@ The site adds a "metadata" in top with a `embedUrl`
 
 this url don't even need login
 
-The problem for that is that for load  this data, needs Javascript, so it was discarted
+The problem for that is that for load this data, needs Javascript, so it was discarted
 
 ## License
 

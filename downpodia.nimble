@@ -1,8 +1,8 @@
 # Package
 
-version       = "2.3.0"
-author        = "Thiago Navarro"
-description   = "A new awesome nimble package"
+version       = "3.0.0"
+author        = "Thiago Ferreira"
+description   = "Easily download podia.com courses videos"
 license       = "GPL-3"
 srcDir        = "src"
 
@@ -15,6 +15,9 @@ requires "cligen"
 
 bin = @["downpodia"]
 binDir = "build"
+
+# Note: If CLI is not compiled with `-d:release`, the program will not
+#       download anything for development purposes
 
 task build_release, "Builds the release version":
   exec "nimble -d:release build"
