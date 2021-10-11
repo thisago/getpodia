@@ -11,8 +11,9 @@ export pages
 when isMainModule:
   import downpodia/base
   from downpodia/progress import progressBar, showBar
-  from std/os import fileExists, dirExists, setCurrentDir, createDir, `/`, getFileSize,
-                    moveFile, walkDir, pcDir, expandFilename
+  from std/os import fileExists, dirExists, setCurrentDir, createDir, `/`,
+                     getFileSize, moveFile, walkDir, pcDir, expandFilename,
+                     pcFile, splitFile, removeFile
   from std/strformat import fmt
   from std/strutils import repeat
   from std/httpclient import downloadFile
@@ -116,7 +117,7 @@ when isMainModule:
       rText = fmt" {progress}mb/{total}mb Speed: {speed}mb/s"
     )
 
-  proc download*(courseDir: seq[string]) =
+  proc download(courseDir: seq[string]) =
     ## Creates the folder structure based on lectures and videos and download all videos
     if courseDir.len < 1:
       quit "Please provide at least one course directory"
@@ -187,7 +188,8 @@ when isMainModule:
         writeFile downloadState, $ state
         showBar ""
 
-  proc genPages*(coursesFolder: seq[string]) =
+  proc genPages(coursesFolder: seq[string]) =
+    ## Generate a clone of Podia
     if coursesFolder.len != 1:
       quit "Please provide just one courses path"
     let coursesFolder = coursesFolder[0]
@@ -216,7 +218,7 @@ when isMainModule:
     writeFile(indexPage, homepage courses)
     openDefaultBrowser indexPage
 
-  proc all*(urls: seq[string]; cookieFile, outDir: string) =
+  proc all(urls: seq[string]; cookieFile, outDir: string) =
     ## Crawl and download automatically
     let outputDir = expandFilename outDir
     for url in urls:
@@ -228,6 +230,26 @@ when isMainModule:
       download(@[outputDir / code])
     genPages(@[outputDir])
 
+  proc clean(urls: seq[string]) =
+    ## Delete all generated pages of all courses
+    proc delPages(url: string) =
+      for fs in url.walkDir:
+        case fs.kind:
+        of pcDir:
+          delPages fs.path
+        of pcFile:
+          let
+            parts = fs.path.splitFile
+            filename = fmt"{parts.name}{parts.ext}"
+          if filename == indexHtmlFile:
+            stdout.styledWrite fgGreen, "Deleting "
+            echo fs.path
+            removeFile fs.path
+        else:
+          discard
+    for url in urls:
+      url.delPages
+
   import pkg/cligen
   dispatchMulti([crawl, short = {
     "extractMetadata": 'm'
@@ -235,7 +257,8 @@ when isMainModule:
     download
   ], [
     all
-  ],
-  [
+  ], [
     genPages
+  ], [
+    clean
   ])

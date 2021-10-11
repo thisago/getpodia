@@ -2,6 +2,13 @@
 
 All changes
 
+## Version 3.1.0 (11/10/2021)
+
+- Added `clean` command to delete all generated pages
+- Added description to `genPages` command
+
+---
+
 ## Version 3.0.0 (10/10/2021)
 
 - Added page generation to `all` command
