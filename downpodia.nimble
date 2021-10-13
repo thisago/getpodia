@@ -1,6 +1,6 @@
 # Package
 
-version       = "3.1.0"
+version       = "3.2.0"
 author        = "Thiago Ferreira"
 description   = "Easily download podia.com courses videos"
 license       = "GPL-3"
@@ -9,15 +9,6 @@ srcDir        = "src"
 # Dependencies
 
 requires "nim >= 1.0.0"
-
-# CLI
-requires "cligen"
-
-bin = @["downpodia"]
-binDir = "build"
-
-# Note: If CLI is not compiled with `-d:release`, the program will not
-#       download anything for development purposes
 
 task build_release, "Builds the release version":
   exec "nimble -d:release build"

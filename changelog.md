@@ -2,6 +2,12 @@
 
 All changes
 
+## Version 3.2.0 (13/10/2021)
+
+- Clean up
+
+---
+
 ## Version 3.1.0 (11/10/2021)
 
 - Added `clean` command to delete all generated pages

@@ -1,5 +1,4 @@
 ## Course extractor
-
 import downpodia/base
 
 from std/uri import parseUri, `/`, `$`, Uri
