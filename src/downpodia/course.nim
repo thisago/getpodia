@@ -141,7 +141,7 @@ proc getMeta*(self: var CourseVideo) =
 
 when isMainModule:
   var video = CourseVideo(
-    pageUrl: "http://127.0.0.1:5555/.test/Venda%20com%20An%C3%BAncios.html" # Some downloaded Podia video page
+    pageUrl: "" # Some downloaded Podia video page
   )
   newHttpClient().update video
   # video.getMeta
