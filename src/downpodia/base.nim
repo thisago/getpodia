@@ -30,17 +30,22 @@ func findAll*(node; tagName: string; attrs: openArray[FindAttr];
     for (key, val) in attrs:
       if val == node.attr key:
         result.add node
+
+from std/xmltree import `$`
 func findAll*(node; sels: openArray[(string, seq[FindAttr])];
               caseInsensitive = false): seq[XmlNode] =
   ## querySelectorAll
   ##
   ## TODO: Save this in a separated module
-  var el = node
-  for (name, attrs) in sels:
-    result = el.findAll(name, attrs, caseInsensitive)
-    if result.len == 0:
+  result.add node
+  for i, (name, attrs) in sels:
+    var matched: seq[XmlNode]
+    for el in result:
+      for x in el.findAll(name, attrs, caseInsensitive):
+        matched.add x
+    if matched.len == 0:
       break
-    el = result[0]
+    result = matched
 
 const InvalidFilename = {'/','\\',':','*','?','"','<','>'}
 proc secureName*(str: string): string =

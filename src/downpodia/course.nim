@@ -95,7 +95,7 @@ proc update*(client; self: var CourseVideo) =
       result.avatar = node.findAll("img")[0].attrs["src"]
       result.author = node.findAll("span", {"class": "text-w-700 text-darkest text-xs"})[0].innerText.strip
       result.body = node.findAll([
-        ("div", @{"class": "comment-body"}),
+        ("div", @{"class": "col-sm-12"}),
         ("div", @{"class": "ml2 text-xs"})
       ])[0].innerText.strip
       result.creation = node.findAll("time")[0].attrs["datetime"]
@@ -141,11 +141,12 @@ proc getMeta*(self: var CourseVideo) =
 
 when isMainModule:
   var video = CourseVideo(
-    pageUrl: "" # Some downloaded Podia video page
+    pageUrl: "http://127.0.0.1:5555/.test/Venda%20com%20An%C3%BAncios.html" # Some downloaded Podia video page
   )
   newHttpClient().update video
   # video.getMeta
   echo video
+  echo "---"
   for comment in video.comments:
     echo comment[]
     for comment in comment.nested:

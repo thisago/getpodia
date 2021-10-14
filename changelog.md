@@ -2,6 +2,12 @@
 
 All changes
 
+## Version 3.3.0 (14/10/2021)
+
+- Fixed [#1](https://github.com/thisago/downpodia/issues/1)
+
+---
+
 ## Version 3.2.0 (13/10/2021)
 
 - Clean up

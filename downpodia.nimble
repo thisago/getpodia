@@ -1,6 +1,6 @@
 # Package
 
-version       = "3.2.0"
+version       = "3.3.0"
 author        = "Thiago Ferreira"
 description   = "Easily download podia.com courses videos"
 license       = "GPL-3"
