@@ -26,7 +26,7 @@ Easily download podia.com courses videos
         - [x] Nested comments
       - [x] Video meta
         - [x] Filename
-        - [x] Medias (videos in many resolutions, thumbnails and storyboard)
+        - [x] Medias table (videos in many resolutions, thumbnails and storyboard)
           - [x] Slug
           - [x] Url (to download)
           - [x] Width
