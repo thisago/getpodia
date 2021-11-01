@@ -2,6 +2,12 @@
 
 All changes
 
+## Version 3.4.3 (11/01/2021)
+
+- Renamed `VideoMeta.name` to `VideoMeta.filename`
+
+---
+
 ## Version 3.4.2 (11/01/2021)
 
 - Renamed dir `src/downpodiapkg` to `src/downpodia` back again

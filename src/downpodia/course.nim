@@ -29,8 +29,8 @@ type
   VideoSource* = distinct string
 
   VideoMeta* = object
+    filename*: string
     medias*: Table[string, VideoMediaMeta] ## type => media
-    name*: string
   VideoMediaMeta* = object
     slug*, url*: string ## type
     width*, height*: int
