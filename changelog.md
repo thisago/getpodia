@@ -5,6 +5,9 @@ All changes
 ## Version 3.4.3 (11/01/2021)
 
 - Renamed `VideoMeta.name` to `VideoMeta.filename`
+- Using [thisago/findxml](https://github.com/thisago/findxml) instead local implementation
+- Fixed some imports
+- Changed `course.thumbnail` and `course.hdVideo` to template
 
 ---
 

@@ -40,6 +40,7 @@ Easily download podia.com courses videos
 
 - [x] Fix docs generation
 - [x] `course.VideoComment.creation` needs to store unix time instead string
+- [ ] Use the useragent from a module
 
 ---
 

@@ -1,14 +1,19 @@
 ## Course extractor
-import downpodia/base
+import downpodia/config
 
 from std/uri import parseUri, `/`, `$`, Uri
-# from std/xmltree import attrs
 from std/strtabs import `[]`
 from std/strformat import fmt
 from std/strutils import strip, find, parseInt, split
 from std/json import parseJson, `{}`, getStr, getInt, `$`, items
 from std/tables import Table, `[]`, `[]=`
+from std/httpclient import newHttpClient, close, getContent, HttpClient,
+                           newHttpHeaders
+from std/htmlparser import parseHtml
+from std/xmltree import findAll, attrs, innerText, XmlNode
 export tables.`[]`
+
+import pkg/findxml/findAll
 
 type
   Course* = object
@@ -129,7 +134,7 @@ proc getMeta*(self: var CourseVideo) =
   let endI = jsonData.find ", {});"
   jsonData = jsonData[0..<endI]
   let json = parseJson jsonData
-  self.meta.name = json{"name"}.getStr
+  self.meta.filename = json{"name"}.getStr
   for asset in json{"assets"}:
     var media = VideoMediaMeta(
       slug: asset{"slug"}.getStr,
@@ -141,10 +146,10 @@ proc getMeta*(self: var CourseVideo) =
     )
     self.meta.medias[asset{"type"}.getStr] = media
 
-func thumbnail*(meta: VideoMeta): VideoMediaMeta =
+template thumbnail*(meta: VideoMeta): VideoMediaMeta =
   ## Video thumbnail
   meta.medias["still_image"]
-func hdVideo*(meta: VideoMeta): VideoMediaMeta =
+template hdVideo*(meta: VideoMeta): VideoMediaMeta =
   ## Video HD source
   meta.medias["hd_mp4_video"]
 
@@ -152,7 +157,7 @@ when isMainModule:
   from std/tables import pairs
   from std/json import `%*`
   var video = CourseVideo(
-    pageUrl: "" # Some downloaded Podia video page
+    pageUrl: "http://127.0.0.1:5555/.test/Venda%20com%20An%C3%BAncios.html" # Some downloaded Podia video page
   )
   newHttpClient().update video
   video.getMeta

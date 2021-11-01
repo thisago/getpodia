@@ -1,2 +1,0 @@
-progressBar	downpodia/progress.html#progressBar,int,int,string,string	progress: progressBar(curr, max: int; lText = &quot; &quot;; rText = &quot; &quot;): string	
-showBar	downpodia/progress.html#showBar,string	progress: showBar(txt: string)	
