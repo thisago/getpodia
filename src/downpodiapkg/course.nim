@@ -1,12 +1,14 @@
 ## Course extractor
-import downpodia/base
+import downpodiapkg/base
 
 from std/uri import parseUri, `/`, `$`, Uri
-from std/xmltree import attrs
+# from std/xmltree import attrs
 from std/strtabs import `[]`
 from std/strformat import fmt
 from std/strutils import strip, find, parseInt, split
-from std/json import parseJson, `{}`, getStr, getInt, `$`
+from std/json import parseJson, `{}`, getStr, getInt, `$`, items
+from std/tables import Table, `[]`, `[]=`
+export tables.`[]`
 
 type
   Course* = object
@@ -27,10 +29,12 @@ type
   VideoSource* = distinct string
 
   VideoMeta* = object
-    filename*, originalVideo*, hdVideo*, thumbnail*: string
+    medias*: Table[string, VideoMediaMeta] ## type => media
+    name*: string
+  VideoMediaMeta* = object
+    slug*, url*: string ## type
     width*, height*: int
     size*: int64 ## bytes
-    bitrate*: int
     createdAt*: int64 # unix time
 
 using
@@ -118,34 +122,46 @@ proc getMeta*(self: var CourseVideo) =
   client.headers = newHttpHeaders({
     "User-Agent": userAgent
   })
-  let
-    body = client.getContent self.url.string
-    html = parseHtml body
+  let body = client.getContent self.url.string
 
   let startI = body.findText "W.iframeInit("
   var jsonData = body[startI..^1]
   let endI = jsonData.find ", {});"
   jsonData = jsonData[0..<endI]
-  let
-    json = parseJson jsonData
-    vid = json{"assets"}{0}
-  self.meta.originalVideo = vid{"url"}.getStr
-  self.meta.hdVideo = json{"assets"}{4}{"url"}.getStr
-  self.meta.height = vid{"height"}.getInt
-  self.meta.width = vid{"width"}.getInt
-  self.meta.bitrate = vid{"bitrate"}.getInt
-  self.meta.size = vid{"size"}.getInt
-  self.meta.createdAt = vid{"created_at"}.getInt
-  self.meta.filename = json{"name"}.getStr
-  self.meta.thumbnail = json{"assets"}{6}{"url"}.getStr
+  let json = parseJson jsonData
+  self.meta.name = json{"name"}.getStr
+  for asset in json{"assets"}:
+    var media = VideoMediaMeta(
+      slug: asset{"slug"}.getStr,
+      url: asset{"url"}.getStr,
+      width: asset{"width"}.getInt,
+      height: asset{"height"}.getInt,
+      size: asset{"size"}.getInt,
+      createdAt: asset{"created_at"}.getInt
+    )
+    self.meta.medias[asset{"type"}.getStr] = media
+
+func thumbnail*(meta: VideoMeta): VideoMediaMeta =
+  ## Video thumbnail
+  meta.medias["still_image"]
+func hdVideo*(meta: VideoMeta): VideoMediaMeta =
+  ## Video HD source
+  meta.medias["hd_mp4_video"]
 
 when isMainModule:
+  from std/tables import pairs
+  from std/json import `%*`
   var video = CourseVideo(
     pageUrl: "" # Some downloaded Podia video page
   )
   newHttpClient().update video
-  # video.getMeta
+  video.getMeta
   echo video
+  for name, m in video.meta.medias:
+    echo name, %*m
+  echo "---"
+  echo video.meta.thumbnail
+  echo video.meta.hdVideo
   echo "---"
   for comment in video.comments:
     echo comment[]

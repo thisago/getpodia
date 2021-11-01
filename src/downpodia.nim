@@ -1,4 +1,4 @@
-import downpodia/[
+import downpodiapkg/[
   course,
   pages
 ]

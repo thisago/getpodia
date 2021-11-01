@@ -2,19 +2,30 @@
 
 All changes
 
-## Version 3.3.0 (14/10/2021)
+## Version 3.4.0 (11/01/2021)
+
+- Done [#6](https://github.com/thisago/downpodia/issues/6) and [#7](https://github.com/thisago/downpodia/issues/7)
+- Renamed dir `src/downpodia` to `src/downpodiapkg`
+- Removed useless imports
+- Fixed [#5](https://github.com/thisago/downpodia/issues/5)
+- Not a problem anymore [#3](https://github.com/thisago/downpodia/issues/3)
+- Removed useless tasks in nimble file
+
+---
+
+## Version 3.3.0 (10/14/2021)
 
 - Fixed [#1](https://github.com/thisago/downpodia/issues/1)
 
 ---
 
-## Version 3.2.0 (13/10/2021)
+## Version 3.2.0 (10/13/2021)
 
 - Clean up
 
 ---
 
-## Version 3.1.0 (11/10/2021)
+## Version 3.1.0 (10/11/2021)
 
 - Added `clean` command to delete all generated pages
 - Added description to `genPages` command
@@ -34,14 +45,14 @@ All changes
 
 ---
 
-## Version 2.3.0 (08/10/2021)
+## Version 2.3.0 (10/08/2021)
 
 - page generation
   - Added comments counter in `video.nimf`
 
 ---
 
-## Version 2.2.0 (07/10/2021)
+## Version 2.2.0 (10/07/2021)
 
 - page generation
   - Added id to lectures
@@ -49,14 +60,14 @@ All changes
 
 ---
 
-## Version 2.1.0 (07/10/2021)
+## Version 2.1.0 (10/07/2021)
 
 - Added comment likes and creation date in pages generation
 - Removed url from like button
 
 ---
 
-## Version 2.0.0 (06/10/2021)
+## Version 2.0.0 (10/06/2021)
 
 - Added Podia HTML pages generation
 - Added download size verification
@@ -65,19 +76,19 @@ All changes
 
 ---
 
-## Version 1.1.2 (05/10/2021)
+## Version 1.1.2 (10/05/2021)
 
 - Added coursename and description info in `stdout`
 
 ---
 
-## Version 1.1.1 (04/10/2021)
+## Version 1.1.1 (10/04/2021)
 
 - Fixed crash when description not exists
 
 ---
 
-## Version 1.1.0 (04/10/2021)
+## Version 1.1.0 (10/04/2021)
 
 - Added `all` command
 - smarter and prettier printing
@@ -87,7 +98,7 @@ All changes
 
 ---
 
-## Version 1.0.0 (04/10/2021)
+## Version 1.0.0 (10/04/2021)
 
 - Added lib and cli
 - Release

@@ -31,7 +31,6 @@ func findAll*(node; tagName: string; attrs: openArray[FindAttr];
       if val == node.attr key:
         result.add node
 
-from std/xmltree import `$`
 func findAll*(node; sels: openArray[(string, seq[FindAttr])];
               caseInsensitive = false): seq[XmlNode] =
   ## querySelectorAll
@@ -46,9 +45,3 @@ func findAll*(node; sels: openArray[(string, seq[FindAttr])];
     if matched.len == 0:
       break
     result = matched
-
-const InvalidFilename = {'/','\\',':','*','?','"','<','>'}
-proc secureName*(str: string): string =
-  for ch in str:
-    if ch notin InvalidFilename:
-      result.add ch
