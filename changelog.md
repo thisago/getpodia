@@ -2,6 +2,12 @@
 
 All changes
 
+## Version 3.4.1 (11/01/2021)
+
+- Removed useless file
+
+---
+
 ## Version 3.4.0 (11/01/2021)
 
 - Done [#6](https://github.com/thisago/downpodia/issues/6) and [#7](https://github.com/thisago/downpodia/issues/7)
