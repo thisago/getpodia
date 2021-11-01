@@ -1,4 +1,2 @@
-import downpodiapkg/[
-  course
-]
-export course, pages
+import downpodiapkg/course
+export course
