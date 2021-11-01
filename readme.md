@@ -38,9 +38,8 @@ Easily download podia.com courses videos
 
 ## TODO
 
-- [ ] Fix docs generation
-- [ ] `course.VideoComment.creation` needs to store unix time instead string
-- [ ] Remove inline CSS and put it in a external
+- [x] Fix docs generation
+- [x] `course.VideoComment.creation` needs to store unix time instead string
 
 ---
 

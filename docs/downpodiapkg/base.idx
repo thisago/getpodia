@@ -1,0 +1,4 @@
+userAgent	downpodiapkg/base.html#userAgent	base: userAgent	
+FindAttr	downpodiapkg/base.html#FindAttr	base: FindAttr	
+findAll	downpodiapkg/base.html#findAll,,string,openArray[FindAttr]	base: findAll(node; tagName: string; attrs: openArray[FindAttr];\n        caseInsensitive = false): seq[XmlNode]	
+findAll	downpodiapkg/base.html#findAll,,openArray[]	base: findAll(node; sels: openArray[(string, seq[FindAttr])]; caseInsensitive = false): seq[\n    XmlNode]	
