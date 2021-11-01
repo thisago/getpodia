@@ -6,7 +6,7 @@ from std/strtabs import `[]`
 from std/strformat import fmt
 from std/strutils import strip, find, parseInt, split
 from std/json import parseJson, `{}`, getStr, getInt, `$`, items
-from std/tables import Table, `[]`, `[]=`
+from std/tables import Table, `[]`, `[]=`, hasKey
 from std/httpclient import newHttpClient, close, getContent, HttpClient,
                            newHttpHeaders
 from std/htmlparser import parseHtml
@@ -146,12 +146,16 @@ proc getMeta*(self: var CourseVideo) =
     )
     self.meta.medias[asset{"type"}.getStr] = media
 
-template thumbnail*(meta: VideoMeta): VideoMediaMeta =
+func getMedia(meta: VideoMeta; name: string): VideoMediaMeta =
   ## Video thumbnail
-  meta.medias["still_image"]
-template hdVideo*(meta: VideoMeta): VideoMediaMeta =
+  if meta.medias.hasKey name:
+    result = meta.medias[name]
+func thumbnail*(meta: VideoMeta): VideoMediaMeta {.inline.} =
+  ## Video thumbnail
+  meta.getMedia "still_image"
+func hdVideo*(meta: VideoMeta): VideoMediaMeta {.inline.} =
   ## Video HD source
-  meta.medias["hd_mp4_video"]
+  meta.getMedia "hd_mp4_video"
 
 when isMainModule:
   from std/tables import pairs

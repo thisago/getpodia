@@ -2,6 +2,12 @@
 
 All changes
 
+## Version 3.4.4 (11/01/2021)
+
+- Fixed `thumbnail` and `hdVideo` getting to not crash anymore
+
+---
+
 ## Version 3.4.3 (11/01/2021)
 
 - Renamed `VideoMeta.name` to `VideoMeta.filename`
