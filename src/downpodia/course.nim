@@ -1,5 +1,5 @@
 ## Course extractor
-import downpodiapkg/base
+import downpodia/base
 
 from std/uri import parseUri, `/`, `$`, Uri
 # from std/xmltree import attrs

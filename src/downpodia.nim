@@ -1,2 +1,2 @@
-import downpodiapkg/course
+import downpodia/course
 export course
