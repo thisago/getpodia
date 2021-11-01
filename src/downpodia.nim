@@ -1,5 +1,4 @@
 import downpodiapkg/[
-  course,
-  pages
+  course
 ]
 export course, pages

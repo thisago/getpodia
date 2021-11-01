@@ -4,7 +4,7 @@ All changes
 
 ## Version 3.4.1 (11/01/2021)
 
-- Removed useless file
+- Removed useless file and import
 
 ---
 
