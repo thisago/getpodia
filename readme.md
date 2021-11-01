@@ -26,19 +26,13 @@ Easily download podia.com courses videos
         - [x] Nested comments
       - [x] Video meta
         - [x] Filename
-        - [x] Url (to download)
-        - [x] Thumbnail
-        - [x] Width
-        - [x] Height
-        - [x] Size
-        - [x] Bitrate
-        - [x] CreatedAt
-
-### Page generation
-All pages have same design as podia.com
-- [x] Home page (courses selection)
-- [x] Course page (lecture preview and video selection)
-- [x] Video page (watch video and view comments)
+        - [x] Medias (videos in many resolutions, thumbnails and storyboard)
+          - [x] Slug
+          - [x] Url (to download)
+          - [x] Width
+          - [x] Height
+          - [x] Size
+          - [x] CreatedAt
 
 ---
 
