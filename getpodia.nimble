@@ -12,4 +12,4 @@ requires "nim >= 1.0.0"
 requires "https://github.com/thisago/findxml"
 
 task gen_docs, "Generates the documentation":
-  exec "nim doc --project --out:docs src/downpodia.nim"
+  exec "nim doc --project --out:docs src/getpodia.nim"

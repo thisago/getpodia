@@ -1,5 +1,5 @@
 ## Course extractor
-import downpodia/config
+import getpodia/config
 
 from std/uri import parseUri, `/`, `$`, Uri
 from std/strtabs import `[]`

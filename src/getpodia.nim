@@ -1,2 +1,2 @@
-import downpodia/course
+import getpodia/course
 export course
