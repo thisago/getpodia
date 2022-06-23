@@ -1,8 +1,8 @@
 # Package
 
-version       = "3.4.4"
-author        = "Thiago Ferreira"
-description   = "Easily download podia.com courses videos"
+version       = "3.5.0"
+author        = "Thiago Navarro"
+description   = "Extract Podia sites courses data"
 license       = "GPL-3"
 srcDir        = "src"
 

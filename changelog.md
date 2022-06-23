@@ -1,6 +1,11 @@
 # Changelog
 
-All changes
+## Version 3.5.0 (2022/06/23)
+
+- Fixed extraction in new podia design 
+- Renamed project to getpodia
+
+---
 
 ## Version 3.4.4 (11/01/2021)
 
