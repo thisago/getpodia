@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 3.7.0 (Tuesday 6 Dec 2022)
+
+- Fixed video code extraction
+- Added file url extraction
+
+---
+
+## Version 3.6.0 (Tuesday 6 Dec 2022)
+
+- Fixed extraction in new podia video page
+- Fixed video comments extraction
+
+---
+
 ## Version 3.5.0 (2022/06/23)
 
 - Fixed extraction in new podia design 

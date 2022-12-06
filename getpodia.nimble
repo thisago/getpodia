@@ -1,6 +1,6 @@
 # Package
 
-version       = "3.5.0"
+version       = "3.7.0"
 author        = "Thiago Navarro"
 description   = "Extract Podia sites courses data"
 license       = "GPL-3"
@@ -10,6 +10,5 @@ srcDir        = "src"
 
 requires "nim >= 1.0.0"
 requires "https://github.com/thisago/findxml"
-
-task gen_docs, "Generates the documentation":
-  exec "nim doc --project --out:docs src/getpodia.nim"
+requires "scraper"
+requires "util"
