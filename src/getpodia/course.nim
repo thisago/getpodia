@@ -65,7 +65,9 @@ proc extractCourse*(client; url: string): Course =
     parsedUrl = url.parseUri
     urlBase = parsedUrl.getBaseUrl
     html = parseHtml client.getContent url
-  for lect in html.findAll("li", {"class": "list-group list-group-menu list-group-xs mb-6"}):
+    cardBody = html.findAll("ol", {"class": "sticky-contents pl-0 list-unstyled"})[0]
+
+  for lect in cardBody.findAll("li", {"class": "list-group list-group-menu list-group-xs mb-6"}):
     var lecture: CourseLecture
     lecture.name = lect.findAll("h2", {"class": "h4 text-md mb-2"}).text.strip
     for vidEl in lect.findAll("a", {"class": "list-group-item list-group-item-action"}):
@@ -172,7 +174,7 @@ when isMainModule:
   from std/tables import pairs
   from std/json import `%*`, pretty
   import std/jsonutils
-  when true:
+  when not true:
     var video = CourseVideo(
       pageUrl: "http://127.0.0.1:5555/.test/videos/PDF%20-%20Prece%20contra%20Esp%C3%ADrito%20do%20Ci%C3%BAmes.html" # Some downloaded Podia video page
     )
@@ -193,5 +195,5 @@ when isMainModule:
     #     for comment in comment.nested:
     #       echo "    ", comment[]
   else:
-    let course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/BATALHA%20ESPIRITUAL%20I%20Entendendo%20o%20Advers%C3%A1rio.html"
+    let course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/Aprenda%20a%20Criar%20Cursos%20Online%20Uma%20Renda%20Extra%20para%20suas%20Horas%20Vagas!.html"
     echo pretty course.toJson

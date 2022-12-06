@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 3.7.1 (Tuesday 6 Dec 2022)
+
+- Fixed duplicated lectures extraction
+
+---
+
 ## Version 3.7.0 (Tuesday 6 Dec 2022)
 
 - Fixed video code extraction
