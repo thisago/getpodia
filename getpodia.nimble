@@ -1,6 +1,6 @@
 # Package
 
-version       = "3.7.1"
+version       = "3.7.2"
 author        = "Thiago Navarro"
 description   = "Extract Podia sites courses data"
 license       = "GPL-3"

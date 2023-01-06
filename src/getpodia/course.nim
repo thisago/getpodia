@@ -59,6 +59,7 @@ proc getCode*(url: string): string =
   ## Get the course code (url identification) from url string
   getCode parseUri url
 
+import xmltree
 proc extractCourse*(client; url: string): Course =
   ## Extracts all data from all videos from course
   let
@@ -69,7 +70,11 @@ proc extractCourse*(client; url: string): Course =
 
   for lect in cardBody.findAll("li", {"class": "list-group list-group-menu list-group-xs mb-6"}):
     var lecture: CourseLecture
-    lecture.name = lect.findAll("h2", {"class": "h4 text-md mb-2"}).text.strip
+    echo lect
+    lecture.name = lect.findAll([
+      ("nav", @{"class": ""}),
+      ("h2", @{"": ""}),
+    ]).text.strip
     for vidEl in lect.findAll("a", {"class": "list-group-item list-group-item-action"}):
       var video: CourseVideo
       # video.pageUrl = $(urlBase / vidEl.attrs["href"])
@@ -195,5 +200,6 @@ when isMainModule:
     #     for comment in comment.nested:
     #       echo "    ", comment[]
   else:
-    let course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/Aprenda%20a%20Criar%20Cursos%20Online%20Uma%20Renda%20Extra%20para%20suas%20Horas%20Vagas!.html"
+    let course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/o-segredo-das-ervas-e-especiarias-parte-ii.html"
+    # let course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/Aprenda%20a%20Criar%20Cursos%20Online%20Uma%20Renda%20Extra%20para%20suas%20Horas%20Vagas!.html"
     echo pretty course.toJson

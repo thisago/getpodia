@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 3.7.1 (Tuesday 6 Jan 2023)
+
+- Fixed lecture name extraction
+
+---
+
 ## Version 3.7.1 (Tuesday 6 Dec 2022)
 
 - Fixed duplicated lectures extraction
