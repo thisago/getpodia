@@ -70,7 +70,6 @@ proc extractCourse*(client; url: string): Course =
 
   for lect in cardBody.findAll("li", {"class": "list-group list-group-menu list-group-xs mb-6"}):
     var lecture: CourseLecture
-    echo lect
     lecture.name = lect.findAll([
       ("nav", @{"class": ""}),
       ("h2", @{"": ""}),
@@ -200,6 +199,10 @@ when isMainModule:
     #     for comment in comment.nested:
     #       echo "    ", comment[]
   else:
-    let course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/o-segredo-das-ervas-e-especiarias-parte-ii.html"
+    var course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/o-segredo-das-ervas-e-especiarias-parte-ii.html"
+    # let course = readFile(".test/coue")
     # let course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/Aprenda%20a%20Criar%20Cursos%20Online%20Uma%20Renda%20Extra%20para%20suas%20Horas%20Vagas!.html"
-    echo pretty course.toJson
+    echo pretty course.lectures[0].videos[0].toJson
+    let client = newHttpClient()
+    client.update course.lectures[0].videos[0]
+    echo pretty course.lectures[0].videos[0].toJson
