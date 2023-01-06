@@ -172,6 +172,9 @@ func thumbnail*(meta: VideoMeta): VideoMediaMeta {.inline.} =
 func hdVideo*(meta: VideoMeta): VideoMediaMeta {.inline.} =
   ## Video HD source
   meta.getMedia "hd_mp4_video"
+func originalVideo*(meta: VideoMeta): VideoMediaMeta {.inline.} =
+  ## Original video source
+  meta.getMedia "original"
 
 when isMainModule:
   from std/tables import pairs

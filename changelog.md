@@ -1,6 +1,12 @@
 # Changelog
 
-## Version 3.7.1 (Tuesday 6 Jan 2023)
+## Version 3.7.3 (Tuesday 6 Jan 2023)
+
+- Added `originalVideo` func
+
+---
+
+## Version 3.7.2 (Tuesday 6 Jan 2023)
 
 - Fixed lecture name extraction
 
