@@ -59,7 +59,6 @@ proc getCode*(url: string): string =
   ## Get the course code (url identification) from url string
   getCode parseUri url
 
-import xmltree
 proc extractCourse*(client; url: string): Course =
   ## Extracts all data from all videos from course
   let
@@ -176,7 +175,7 @@ func hdVideo*(meta: VideoMeta): VideoMediaMeta {.inline.} =
 
 when isMainModule:
   from std/tables import pairs
-  from std/json import `%*`, pretty
+  from std/json import `%*`, pretty, to
   import std/jsonutils
   when not true:
     var video = CourseVideo(
@@ -202,7 +201,7 @@ when isMainModule:
     var course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/o-segredo-das-ervas-e-especiarias-parte-ii.html"
     # let course = readFile(".test/coue")
     # let course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/Aprenda%20a%20Criar%20Cursos%20Online%20Uma%20Renda%20Extra%20para%20suas%20Horas%20Vagas!.html"
-    echo pretty course.lectures[0].videos[0].toJson
+    # echo pretty course.lectures[0].videos[0].toJson
     let client = newHttpClient()
     client.update course.lectures[0].videos[0]
     echo pretty course.lectures[0].videos[0].toJson
