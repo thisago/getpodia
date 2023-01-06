@@ -2,7 +2,7 @@
 
 ## Version 3.7.3 (Tuesday 6 Jan 2023)
 
-- Added `originalVideo` func
+- Added a fallback to `hdVideo`
 
 ---
 
