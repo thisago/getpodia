@@ -75,8 +75,8 @@ proc extractCourse*(client; url: string): Course =
     ]).text.strip
     for vidEl in lect.findAll("a", {"class": "list-group-item list-group-item-action"}):
       var video: CourseVideo
-      # video.pageUrl = $(urlBase / vidEl.attrs["href"])
-      video.pageUrl = vidEl.attrs["href"]
+      video.pageUrl = $(urlBase / vidEl.attrs["href"])
+      # video.pageUrl = vidEl.attrs["href"]
       video.name = vidEl.innerText.strip
       lecture.videos.add video
     result.lectures.add lecture
@@ -130,12 +130,12 @@ proc update*(client; self: var CourseVideo) =
               comment.nested.add nest.getCommentData
             except: discard
               
-    for com in html.findAll("div", {"data-controller": "podia--comments--comment--form-component"}):
-      if com.attr("id") == "comments":
-        continue
-      let comment = com.getCommentData
-      comment.getNested com
-      self.comments.add comment
+    # for com in html.findAll("div", {"data-controller": "podia--comments--comment--form-component"}):
+    #   if com.attr("id") == "comments":
+    #     continue
+    #   let comment = com.getCommentData
+    #   comment.getNested com
+    #   self.comments.add comment
 
 proc url*(self: CourseVideo): VideoSource =
   VideoSource("https://fast.wistia.net/embed/iframe/" & self.code)
@@ -200,10 +200,13 @@ when isMainModule:
     #     for comment in comment.nested:
     #       echo "    ", comment[]
   else:
-    var course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/o-segredo-das-ervas-e-especiarias-parte-ii.html"
+    var course = newHttpClient().extractCourse "http://127.0.0.1:5500/view/courses/b2b.html"
     # let course = readFile(".test/coue")
     # let course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/Aprenda%20a%20Criar%20Cursos%20Online%20Uma%20Renda%20Extra%20para%20suas%20Horas%20Vagas!.html"
     # echo pretty course.lectures[0].videos[0].toJson
+
     let client = newHttpClient()
+    echo course.lectures[0].videos[0]
     client.update course.lectures[0].videos[0]
+    getMeta course.lectures[0].videos[0]
     echo pretty course.lectures[0].videos[0].toJson

@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 3.7.4 (2023/08/17)
+
+- Disable comment extraction
+- Fixed video `pageUrl` link
+
+---
+
 ## Version 3.7.3 (Tuesday 6 Jan 2023)
 
 - Added a fallback to `hdVideo`
