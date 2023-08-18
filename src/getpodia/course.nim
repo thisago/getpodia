@@ -89,12 +89,6 @@ proc extractCourse*(client; url: string): Course =
   result.image = html.findAll("a", {"class": "thumb thumb-lg thumb-photo thumb-link"})[0].attrs["style"][22..^3]
   result.code = url.getCode
 
-
-proc findText(body, t: string): int =
-  result = body.find(t) + t.len
-  if result < 0:
-    result = 0
-
 proc update*(client; self: var CourseVideo) =
   ## Updates the video data by making a GET request to `self.url`
   let
@@ -112,30 +106,30 @@ proc update*(client; self: var CourseVideo) =
         var link = parseUri self.pageUrl
         link.path = self.fileUrl
         self.fileUrl = $link
-  block comments:
-    proc getCommentData(node: XmlNode): VideoComment =
-      new result
-      result.avatar = node.findAll("div", {"class": "avatar avatar-xs"})[0].attrs["style"][22..^3]
-      result.author = node.findAll("a", {"class": "font-weight-bold text-sm text-grey-dark my-1"}).text.strip
-      result.body = node.findAll("div", {"class": "text-longform mb-3"}).text.strip
-      result.creation = node.findAll("span", {"class": "text-muted text-sm my-1"})[0].attrs["data-title"]
-      let likes = node.findAll("a", {"class": "btn btn-xs btn-transparent-soft btn-rounded btn-tight btn-icon"}).text.strip
-      if likes.len > 7:
-        result.likes = likes[7..^1].parseInt
-    proc getNested(comment: VideoComment; commentNode: XmlNode) =
-      for tdiv in commentNode.findAll("div"):
-        if "replies" in tdiv.attr "id":
-          for nest in tdiv:
-            try:
-              comment.nested.add nest.getCommentData
-            except: discard
+  # block comments:
+  #   proc getCommentData(node: XmlNode): VideoComment =
+  #     new result
+  #     result.avatar = node.findAll("div", {"class": "avatar avatar-xs"})[0].attrs["style"][22..^3]
+  #     result.author = node.findAll("a", {"class": "font-weight-bold text-sm text-grey-dark my-1"}).text.strip
+  #     result.body = node.findAll("div", {"class": "text-longform mb-3"}).text.strip
+  #     result.creation = node.findAll("span", {"class": "text-muted text-sm my-1"})[0].attrs["data-title"]
+  #     let likes = node.findAll("a", {"class": "btn btn-xs btn-transparent-soft btn-rounded btn-tight btn-icon"}).text.strip
+  #     if likes.len > 7:
+  #       result.likes = likes[7..^1].parseInt
+  #   proc getNested(comment: VideoComment; commentNode: XmlNode) =
+  #     for tdiv in commentNode.findAll("div"):
+  #       if "replies" in tdiv.attr "id":
+  #         for nest in tdiv:
+  #           try:
+  #             comment.nested.add nest.getCommentData
+  #           except: discard
               
-    # for com in html.findAll("div", {"data-controller": "podia--comments--comment--form-component"}):
-    #   if com.attr("id") == "comments":
-    #     continue
-    #   let comment = com.getCommentData
-    #   comment.getNested com
-    #   self.comments.add comment
+  #   for com in html.findAll("div", {"data-controller": "podia--comments--comment--form-component"}):
+  #     if com.attr("id") == "comments":
+  #       continue
+  #     let comment = com.getCommentData
+  #     comment.getNested com
+  #     self.comments.add comment
 
 proc url*(self: CourseVideo): VideoSource =
   VideoSource("https://fast.wistia.net/embed/iframe/" & self.code)
@@ -200,12 +194,11 @@ when isMainModule:
     #     for comment in comment.nested:
     #       echo "    ", comment[]
   else:
-    var course = newHttpClient().extractCourse "http://127.0.0.1:5500/view/courses/b2b.html"
-    # let course = readFile(".test/coue")
-    # let course = newHttpClient().extractCourse "http://127.0.0.1:5555/.test/courses/Aprenda%20a%20Criar%20Cursos%20Online%20Uma%20Renda%20Extra%20para%20suas%20Horas%20Vagas!.html"
-    # echo pretty course.lectures[0].videos[0].toJson
+    let client = newHttpClient(headers = newHttpHeaders({
+      "cookie": ""
+    }))
+    var course = client.extractCourse "https://afonsolopes.podia.com/view/courses/b2b"
 
-    let client = newHttpClient()
     echo course.lectures[0].videos[0]
     client.update course.lectures[0].videos[0]
     getMeta course.lectures[0].videos[0]
