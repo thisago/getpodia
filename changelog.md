@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 3.7.5 (2023/12/03)
+
+- Fixed completed lectures extraction now using `nimquery`
+- Fixed description extraction
+- Fixed file url extraction
+
 ## Version 3.7.4 (2023/08/17)
 
 - Disable comment extraction

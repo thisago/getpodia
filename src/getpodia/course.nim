@@ -13,6 +13,8 @@ from std/htmlparser import parseHtml
 from std/xmltree import findAll, attrs, innerText, XmlNode, items, attr
 export tables.`[]`
 
+import pkg/nimquery
+
 import pkg/findxml/findAll
 import pkg/scraper
 
@@ -66,14 +68,13 @@ proc extractCourse*(client; url: string): Course =
     urlBase = parsedUrl.getBaseUrl
     html = parseHtml client.getContent url
     cardBody = html.findAll("ol", {"class": "sticky-contents pl-0 list-unstyled"})[0]
-
   for lect in cardBody.findAll("li", {"class": "list-group list-group-menu list-group-xs mb-6"}):
     var lecture: CourseLecture
     lecture.name = lect.findAll([
       ("nav", @{"class": ""}),
       ("h2", @{"": ""}),
     ]).text.strip
-    for vidEl in lect.findAll("a", {"class": "list-group-item list-group-item-action"}):
+    for vidEl in lect.querySelectorAll "a.list-group-item.list-group-item-action":
       var video: CourseVideo
       video.pageUrl = $(urlBase / vidEl.attrs["href"])
       # video.pageUrl = vidEl.attrs["href"]
@@ -82,7 +83,7 @@ proc extractCourse*(client; url: string): Course =
     result.lectures.add lecture
   result.name = html.findAll("h1", {"class": "h4"}).text.strip
   block description:
-    let descEl = html.findAll("div", {"class": "text-muted text-lg mt-n4 spacer-section"})
+    let descEl = html.findAll("div", {"class": "text-muted text-lg spacer-section"})
     if descEl.len == 0:
       break
     result.description = descEl.text.strip
@@ -96,7 +97,9 @@ proc update*(client; self: var CourseVideo) =
     html = parseHtml body
   self.name = html.findAll("h1", {"class": "pr-md-6 d-md-block d-none"}).text.strip
   block videoCode:
-    self.code = body.between("_wq.push({", "});").between("id: \"", "\"")
+    try:
+      self.code = body.between("_wq.push({", "});").between("id: \"", "\"")
+    except: discard
     if self.code.len == 0:
       self.fileUrl = html.findAll([
         ("div", @{"id": "lesson-content"}),
@@ -171,7 +174,7 @@ func hdVideo*(meta: VideoMeta): VideoMediaMeta {.inline.} =
 
 when isMainModule:
   from std/tables import pairs
-  from std/json import `%*`, pretty, to
+  import std/json
   import std/jsonutils
   when not true:
     var video = CourseVideo(
@@ -197,9 +200,10 @@ when isMainModule:
     let client = newHttpClient(headers = newHttpHeaders({
       "cookie": ""
     }))
-    var course = client.extractCourse "https://afonsolopes.podia.com/view/courses/b2b"
+    var course = client.extractCourse "https://afonsolopes.podia.com/view/courses/batalha-espiritual-i-entendendo-o-inimigo"
 
-    echo course.lectures[0].videos[0]
-    client.update course.lectures[0].videos[0]
-    getMeta course.lectures[0].videos[0]
-    echo pretty course.lectures[0].videos[0].toJson
+    echo %*course
+    echo course.lectures[3].videos[1]
+    client.update course.lectures[3].videos[1]
+    #getMeta course.lectures[3].videos[1]
+    echo pretty course.lectures[3].videos[1].toJson
